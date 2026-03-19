@@ -28,7 +28,7 @@
     - name: SSH authorized_keys kopiëren (optioneel)
       ansible.posix.authorized_key:
         user: "{{ new_user }}"
-        key: "{{ lookup('file', 'pub_keys/marcwerts.pub') }}"
+        key: "{{ lookup('file', 'pub_keys/mwerts.pub') }}"
         state: present
 
     - name: Home directory rechten instellen
