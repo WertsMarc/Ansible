@@ -1,6 +1,6 @@
 ---
 - name: Gebruiker aanmaken met SSH keys en sudo rechten
-  hosts: ubuntu_servers
+  hosts: applicationservers
   become: yes
   vars:
     new_user: "mwerts"
