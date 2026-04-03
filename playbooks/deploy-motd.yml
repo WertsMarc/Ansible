@@ -1,0 +1,31 @@
+---
+- name: Deploy MOTD to all servers
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    motd_src: "../files/etc/motd"
+    motd_dest: "/etc/motd"
+
+  tasks:
+    - name: Backup existing motd (if present)
+      copy:
+        src: "{{ motd_dest }}"
+        dest: "{{ motd_dest }}.bak_{{ ansible_date_time.iso8601_basic_short }}"
+        remote_src: true
+        owner: root
+        group: root
+        mode: "0644"
+      ignore_errors: true
+      tags: ["backup"]
+
+    - name: Copy new MOTD
+      copy:
+        src: "{{ motd_src }}"
+        dest: "{{ motd_dest }}"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      tags: ["deploy"]
