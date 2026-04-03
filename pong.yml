@@ -1,8 +1,0 @@
----
-- name: Ping all webservers
-  hosts: webservers
-  gather_facts: false
-
-  tasks:
-    - name: Ping using Ansible ping module
-      ansible.builtin.ping:
