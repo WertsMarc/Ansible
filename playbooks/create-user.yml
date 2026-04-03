@@ -1,0 +1,40 @@
+---
+- name: Gebruiker aanmaken met SSH keys en sudo rechten
+  hosts: applicationservers
+  become: yes
+  vars:
+    new_user: "mwerts"
+    user_groups: ["sudo"]
+    
+  tasks:
+    - name: Gebruiker aanmaken
+      ansible.builtin.user:
+        name: "{{ new_user }}"
+        comment: "Marc Werts - SysAdmin"
+        shell: /bin/bash
+        groups: "{{ user_groups }}"
+        append: yes
+        create_home: yes
+        state: present
+
+    - name: SSH directory aanmaken
+      ansible.builtin.file:
+        path: "/home/{{ new_user }}/.ssh"
+        state: directory
+        owner: "{{ new_user }}"
+        group: "{{ new_user }}"
+        mode: '0700'
+
+    - name: SSH authorized_keys kopiëren (optioneel)
+      ansible.posix.authorized_key:
+        user: "{{ new_user }}"
+        key: "{{ lookup('file', 'pub_keys/mwerts.pub') }}"
+        state: present
+
+    - name: Home directory rechten instellen
+      ansible.builtin.file:
+        path: "/home/{{ new_user }}"
+        owner: "{{ new_user }}"
+        group: "{{ new_user }}"
+        mode: '0755'
+
